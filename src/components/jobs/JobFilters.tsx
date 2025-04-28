@@ -40,6 +40,21 @@ export const JobFilters = ({ onApplyFilters, onClearFilters }: JobFiltersProps) 
     "Finance",
     "Creative",
     "Administrative",
+    "Agriculture",
+    "Tourism"
+  ];
+  
+  const kenyanLocations = [
+    "Nairobi",
+    "Mombasa",
+    "Kisumu",
+    "Nakuru",
+    "Eldoret",
+    "Thika",
+    "Malindi",
+    "Kitale",
+    "Machakos",
+    "Nyeri"
   ];
   
   const handleEmploymentTypeChange = (typeId: string, checked: boolean) => {
@@ -76,6 +91,11 @@ export const JobFilters = ({ onApplyFilters, onClearFilters }: JobFiltersProps) 
     onClearFilters();
   };
   
+  // Convert the salary range to KES format
+  const formatSalaryKES = (value: number) => {
+    return `KES ${(value).toLocaleString()}`;
+  };
+  
   return (
     <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-6 mb-6">
       <div className="space-y-6">
@@ -110,16 +130,20 @@ export const JobFilters = ({ onApplyFilters, onClearFilters }: JobFiltersProps) 
           {/* Location */}
           <div>
             <Label htmlFor="location" className="text-fem-darkgray">Location</Label>
-            <Input
-              id="location"
-              placeholder="City, state, or zip code"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
+            <Select onValueChange={(value) => setLocation(value)} value={location}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a location" />
+              </SelectTrigger>
+              <SelectContent>
+                {kenyanLocations.map((loc) => (
+                  <SelectItem key={loc} value={loc}>{loc}, Kenya</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             
             <div className="mt-4">
               <Label className="text-fem-darkgray mb-2 flex justify-between items-center">
-                <span>Distance (miles): {radius}</span>
+                <span>Distance (km): {radius}</span>
               </Label>
               <Slider
                 defaultValue={[radius]}
@@ -174,7 +198,7 @@ export const JobFilters = ({ onApplyFilters, onClearFilters }: JobFiltersProps) 
             <Label className="text-fem-darkgray mb-2 flex justify-between items-center">
               <span>Salary Range</span>
               <span className="text-sm font-normal">
-                ${salaryRange[0].toLocaleString()} - ${salaryRange[1].toLocaleString()}
+                {formatSalaryKES(salaryRange[0])} - {formatSalaryKES(salaryRange[1])}
               </span>
             </Label>
             <Slider
@@ -184,9 +208,9 @@ export const JobFilters = ({ onApplyFilters, onClearFilters }: JobFiltersProps) 
               onValueChange={setSalaryRange}
             />
             <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>$0</span>
-              <span>$100K</span>
-              <span>$200K+</span>
+              <span>KES 0</span>
+              <span>KES 100K</span>
+              <span>KES 200K+</span>
             </div>
           </div>
           

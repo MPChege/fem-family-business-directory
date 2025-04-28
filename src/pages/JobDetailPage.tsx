@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -10,13 +9,13 @@ import { Calendar, MapPin, Briefcase, Clock, ChevronLeft } from "lucide-react";
 const jobDetail = {
   id: 1,
   title: "Senior Painter",
-  company: "CreativeSpaces Co.",
-  location: "Los Angeles, CA",
+  company: "CreativeSpaces Kenya",
+  location: "Nairobi, Kenya",
   locationType: "On-site",
-  salary: "$25 - $35 per hour",
-  postedDate: "June 15, 2025",
-  deadline: "July 15, 2025",
-  description: "We're looking for an experienced painter to join our team for residential and commercial projects.",
+  salary: "KES 30,000 - KES 45,000 per month",
+  postedDate: "April 15, 2025",
+  deadline: "May 15, 2025",
+  description: "We're looking for an experienced painter to join our team for residential and commercial projects across Nairobi and surrounding areas.",
   responsibilities: [
     "Lead painting projects from preparation to completion",
     "Estimate time, materials, and labor costs for projects",
@@ -31,10 +30,10 @@ const jobDetail = {
     "Knowledge of different paint types, finishes, and application methods",
     "Experience with color mixing and matching",
     "Ability to safely use ladders and scaffolding",
-    "Valid driver's license",
+    "Valid Kenyan driver's license",
     "Detail-oriented with strong craftsmanship skills"
   ],
-  companyDescription: "CreativeSpaces Co. is a full-service painting company specializing in both residential and commercial projects. Founded in 2010, we've built a reputation for quality, reliability, and beautiful finishes. Our team members are valued for their craftsmanship and commitment to excellence.",
+  companyDescription: "CreativeSpaces Kenya is a full-service painting company specializing in both residential and commercial projects. Founded in 2010, we've built a reputation for quality, reliability, and beautiful finishes across Nairobi, Mombasa, and other major Kenyan cities. Our team members are valued for their craftsmanship and commitment to excellence.",
   logo: "https://res.cloudinary.com/dqxzuiaj2/image/upload/v1/media/photos/function_uuid4_at_0x7fdc1b0fdaf0_sbn1im",
   tags: ["Full-time", "Experienced"],
   featured: true

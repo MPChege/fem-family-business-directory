@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,19 @@ const steps = [
   "Review & Submit"
 ];
 
+const kenyanLocations = [
+  "Nairobi",
+  "Mombasa",
+  "Kisumu",
+  "Nakuru",
+  "Eldoret",
+  "Thika",
+  "Malindi",
+  "Kitale",
+  "Machakos",
+  "Nyeri"
+];
+
 export const JobPostForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
@@ -26,7 +38,7 @@ export const JobPostForm = () => {
     employmentType: "",
     salaryMin: "",
     salaryMax: "",
-    salaryPeriod: "yearly",
+    salaryPeriod: "monthly",
     deadline: "",
     responsibilities: "",
     qualifications: "",
@@ -65,7 +77,6 @@ export const JobPostForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would normally send the data to your backend
     console.log("Form submitted:", formData);
     
     toast({
@@ -73,13 +84,11 @@ export const JobPostForm = () => {
       description: "Your job listing is now live and visible to potential candidates.",
     });
     
-    // Redirect to a success page or job listing
     navigate("/job-posted-success");
   };
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex justify-between">
           {steps.map((step, index) => (
@@ -106,7 +115,6 @@ export const JobPostForm = () => {
       
       <div className="bg-white rounded-lg shadow-md p-6 md:p-8 animate-fade-in">
         <form onSubmit={handleSubmit}>
-          {/* Step 1: Basic Information */}
           {currentStep === 0 && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-fem-navy mb-6">Basic Job Information</h2>
@@ -133,7 +141,7 @@ export const JobPostForm = () => {
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
-                    placeholder="e.g. Creative Spaces Co."
+                    placeholder="e.g. Creative Spaces Kenya Ltd"
                     className="mt-1"
                     required
                   />
@@ -142,15 +150,20 @@ export const JobPostForm = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="location" className="text-fem-navy">Location*</Label>
-                    <Input
-                      id="location"
-                      name="location"
+                    <Select 
+                      onValueChange={(value) => handleSelectChange("location", value)}
                       value={formData.location}
-                      onChange={handleChange}
-                      placeholder="e.g. Los Angeles, CA"
-                      className="mt-1"
                       required
-                    />
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Select city" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {kenyanLocations.map((location) => (
+                          <SelectItem key={location} value={location}>{location}, Kenya</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div>
@@ -194,7 +207,7 @@ export const JobPostForm = () => {
                 </div>
                 
                 <div>
-                  <Label className="text-fem-navy">Salary Range*</Label>
+                  <Label className="text-fem-navy">Salary Range (KES)*</Label>
                   <div className="grid grid-cols-2 gap-4 mt-1">
                     <div>
                       <Input
@@ -222,7 +235,7 @@ export const JobPostForm = () => {
                   <div className="mt-2">
                     <Select 
                       onValueChange={(value) => handleSelectChange("salaryPeriod", value)}
-                      defaultValue="yearly"
+                      defaultValue="monthly"
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Salary period" />
@@ -254,7 +267,6 @@ export const JobPostForm = () => {
             </div>
           )}
           
-          {/* Step 2: Job Details */}
           {currentStep === 1 && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-fem-navy mb-6">Job Details</h2>
@@ -272,7 +284,7 @@ export const JobPostForm = () => {
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
-                    placeholder="At FEM Family Church, we're seeking passionate individuals who..."
+                    placeholder="At FEM Family Church Kenya, we're seeking passionate individuals who..."
                     className="mt-1 min-h-32"
                     required
                   />
@@ -281,7 +293,6 @@ export const JobPostForm = () => {
             </div>
           )}
           
-          {/* Step 3: Requirements */}
           {currentStep === 2 && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-fem-navy mb-6">Job Requirements</h2>
@@ -299,9 +310,9 @@ export const JobPostForm = () => {
                     name="responsibilities"
                     value={formData.responsibilities}
                     onChange={handleChange}
-                    placeholder="- Lead painting projects from preparation to completion
-- Estimate material quantities and costs
-- Ensure all safety procedures are followed"
+                    placeholder="- Lead painting projects across Nairobi from preparation to completion
+- Estimate material quantities and costs in KES
+- Ensure all Kenyan safety standards are followed"
                     className="mt-1 min-h-32"
                     required
                   />
@@ -319,9 +330,9 @@ export const JobPostForm = () => {
                     name="qualifications"
                     value={formData.qualifications}
                     onChange={handleChange}
-                    placeholder="- 3+ years experience in residential painting
-- Knowledge of paint materials and techniques
-- Valid driver's license"
+                    placeholder="- 3+ years experience in residential painting in Kenya
+- Knowledge of locally available paint materials and techniques
+- Valid Kenyan driver's license"
                     className="mt-1 min-h-32"
                     required
                   />
@@ -330,7 +341,6 @@ export const JobPostForm = () => {
             </div>
           )}
           
-          {/* Step 4: Company & Culture */}
           {currentStep === 3 && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-fem-navy mb-6">Company & Culture</h2>
@@ -348,7 +358,7 @@ export const JobPostForm = () => {
                     name="companyDescription"
                     value={formData.companyDescription}
                     onChange={handleChange}
-                    placeholder="Our company is dedicated to delivering quality craftsmanship while upholding Christian values..."
+                    placeholder="Our Kenyan company is dedicated to delivering quality craftsmanship while upholding Christian values in the local community..."
                     className="mt-1 min-h-32"
                     required
                   />
@@ -389,7 +399,6 @@ export const JobPostForm = () => {
             </div>
           )}
           
-          {/* Step 5: Review & Submit */}
           {currentStep === 4 && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-fem-navy mb-6">Review & Submit</h2>
@@ -422,7 +431,7 @@ export const JobPostForm = () => {
                       <p className="text-gray-500">Salary Range</p>
                       <p className="font-medium">
                         {formData.salaryMin && formData.salaryMax 
-                          ? `$${formData.salaryMin} - $${formData.salaryMax} per ${formData.salaryPeriod}` 
+                          ? `KES ${formData.salaryMin} - KES ${formData.salaryMax} per ${formData.salaryPeriod}` 
                           : "Not specified"
                         }
                       </p>
@@ -471,7 +480,7 @@ export const JobPostForm = () => {
               <div className="rounded-lg bg-fem-gold/10 p-4 border border-fem-gold/20">
                 <h3 className="font-semibold text-fem-navy mb-2">Ready to submit?</h3>
                 <p className="text-sm text-gray-600">
-                  Once submitted, your job posting will be reviewed and published to our platform. 
+                  Once submitted, your job posting will be reviewed and published to our Kenya-based platform. 
                   You'll receive an email confirmation once it's live.
                 </p>
               </div>
