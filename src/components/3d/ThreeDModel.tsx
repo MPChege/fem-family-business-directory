@@ -1,7 +1,7 @@
 
 import { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PresentationControls, Float, Environment } from '@react-three/drei';
+import { PresentationControls, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface ModelProps {
@@ -96,8 +96,6 @@ export function ThreeDModel({ type = 'city', className = '' }: ThreeDModelProps)
             )}
           </Float>
         </PresentationControls>
-        
-        <Environment preset="city" />
       </Canvas>
     </div>
   );
