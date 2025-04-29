@@ -1,7 +1,7 @@
 
 import { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, useGLTF, PresentationControls, Float, Environment } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, PresentationControls, Float, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface ModelProps {
@@ -14,17 +14,10 @@ interface ModelProps {
 function Model({ path, scale = 1, position = [0, 0, 0], rotation = [0, 0, 0] }: ModelProps) {
   const mesh = useRef<THREE.Mesh>(null);
   
-  useFrame((state) => {
-    if (mesh.current) {
-      mesh.current.rotation.y += 0.005;
-    }
-  });
-
-  const { scene } = useGLTF(path);
-
   return (
     <mesh ref={mesh} position={position} rotation={rotation} scale={[scale, scale, scale]}>
-      <primitive object={scene} />
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial color="#FFBD59" metalness={0.5} roughness={0.2} />
     </mesh>
   );
 }
@@ -80,7 +73,6 @@ export function ThreeDModel({ type = 'city', className = '' }: ThreeDModelProps)
     <div className={`w-full h-full ${className}`}>
       <Canvas
         camera={{ position: [0, 5, 10], fov: 35 }}
-        dpr={[1, 2]}
       >
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
