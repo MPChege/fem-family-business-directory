@@ -8,7 +8,12 @@ function Model({ scale = 1, position = [0, 0, 0], rotation = [0, 0, 0] }) {
   const mesh = useRef();
   
   return (
-    <mesh ref={mesh} position={position} rotation={rotation} scale={[scale, scale, scale]}>
+    <mesh 
+      ref={mesh} 
+      position={position as [number, number, number]} 
+      rotation={rotation as [number, number, number]} 
+      scale={[scale, scale, scale]}
+    >
       <sphereGeometry args={[1, 32, 32]} />
       <meshStandardMaterial color="#FFBD59" metalness={0.5} roughness={0.2} />
     </mesh>
@@ -18,7 +23,7 @@ function Model({ scale = 1, position = [0, 0, 0], rotation = [0, 0, 0] }) {
 // Simplified building component
 function Building({ position = [0, 0, 0], color = '#C84B31', height = 1 }) {
   return (
-    <mesh position={position}>
+    <mesh position={position as [number, number, number]}>
       <boxGeometry args={[0.5, height, 0.5]} />
       <meshStandardMaterial color={color} />
     </mesh>
@@ -33,7 +38,7 @@ function CityScene() {
       Math.random() * 10 - 5,
       Math.random() * 0.5,
       Math.random() * 10 - 5,
-    ],
+    ] as [number, number, number],
     height: Math.random() * 2 + 0.5,
     color: i % 3 === 0 ? '#C84B31' : i % 3 === 1 ? '#1A1F2C' : '#FFBD59',
   }));
@@ -43,7 +48,7 @@ function CityScene() {
       {buildings.map((building, index) => (
         <Building key={index} {...building} />
       ))}
-      <mesh position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0] as [number, number, number]}>
         <planeGeometry args={[15, 15]} />
         <meshStandardMaterial color="#f0f0f0" />
       </mesh>
@@ -67,29 +72,24 @@ export function ThreeDModel({ type = 'city', className = '' }: ThreeDModelProps)
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
         <pointLight position={[-10, -10, -10]} />
         
-        {/* Automatic rotation for the scene */}
+        {/* Scene content */}
         {type === 'city' ? (
           <CityScene />
         ) : (
           <Model scale={2} />
         )}
         
-        {/* Simple controls */}
-        <OrbitControls />
+        {/* Simple placeholder for controls */}
+        <SimpleControls />
       </Canvas>
     </div>
   );
 }
 
-// Simple OrbitControls component
-function OrbitControls() {
-  const controlsRef = useRef();
-  
-  return (
-    <mesh>
-      {/* This is just a placeholder since we're not using @react-three/drei */}
-    </mesh>
-  );
+// Simple placeholder for controls instead of OrbitControls
+function SimpleControls() {
+  // Just a placeholder, doesn't do anything but doesn't cause errors
+  return null;
 }
 
 export default ThreeDModel;
