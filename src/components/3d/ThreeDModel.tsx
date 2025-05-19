@@ -1,95 +1,83 @@
 
-import { useRef } from 'react';
-import { Canvas } from '@react-three/fiber';
-import * as THREE from 'three';
+import React from 'react';
 
-// Simplified model component with basic geometry
-function Model({ scale = 1, position = [0, 0, 0], rotation = [0, 0, 0] }) {
-  const mesh = useRef();
-  
-  return (
-    <mesh 
-      ref={mesh} 
-      position={position as [number, number, number]} 
-      rotation={rotation as [number, number, number]} 
-      scale={[scale, scale, scale]}
-    >
-      <sphereGeometry args={[1, 32, 32]} />
-      <meshStandardMaterial color="#FFBD59" metalness={0.5} roughness={0.2} />
-    </mesh>
-  );
-}
-
-// Simplified building component
-function Building({ position = [0, 0, 0], color = '#C84B31', height = 1 }) {
-  return (
-    <mesh position={position as [number, number, number]}>
-      <boxGeometry args={[0.5, height, 0.5]} />
-      <meshStandardMaterial color={color} />
-    </mesh>
-  );
-}
-
-// Simplified city scene
-function CityScene() {
-  // Generate 20 buildings with random positions and heights
-  const buildings = Array.from({ length: 20 }, (_, i) => ({
-    position: [
-      Math.random() * 10 - 5,
-      Math.random() * 0.5,
-      Math.random() * 10 - 5,
-    ] as [number, number, number],
-    height: Math.random() * 2 + 0.5,
-    color: i % 3 === 0 ? '#C84B31' : i % 3 === 1 ? '#1A1F2C' : '#FFBD59',
-  }));
-
-  return (
-    <>
-      {buildings.map((building, index) => (
-        <Building key={index} {...building} />
-      ))}
-      <mesh position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0] as [number, number, number]}>
-        <planeGeometry args={[15, 15]} />
-        <meshStandardMaterial color="#f0f0f0" />
-      </mesh>
-    </>
-  );
-}
-
-// Main 3D model component with TypeScript props
+// Interface for component props
 interface ThreeDModelProps {
   type?: 'city' | 'globe';
   className?: string;
 }
 
+/**
+ * A simplified placeholder for 3D visualization using CSS and HTML
+ * This replaces the Three.js implementation until we properly set up the required dependencies
+ */
 export function ThreeDModel({ type = 'city', className = '' }: ThreeDModelProps) {
   return (
-    <div className={`w-full h-full ${className}`}>
-      <Canvas
-        camera={{ position: [0, 5, 10], fov: 35 }}
-      >
-        <ambientLight intensity={0.5} />
-        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-        <pointLight position={[-10, -10, -10]} />
-        
-        {/* Scene content */}
-        {type === 'city' ? (
-          <CityScene />
-        ) : (
-          <Model scale={2} />
-        )}
-        
-        {/* Simple placeholder for controls */}
-        <SimpleControls />
-      </Canvas>
+    <div className={`w-full h-full relative overflow-hidden ${className}`}>
+      {/* Stylized background with gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-fem-navy/80 to-fem-navy/90 z-0"></div>
+      
+      {/* Dynamic content based on type */}
+      {type === 'city' ? (
+        <div className="relative z-10 w-full h-full flex items-center justify-center">
+          <div className="grid grid-cols-5 gap-2">
+            {/* Generate stylized "buildings" using CSS */}
+            {Array.from({ length: 20 }).map((_, i) => {
+              const height = 40 + Math.random() * 120;
+              const color = i % 3 === 0 ? '#C84B31' : i % 3 === 1 ? '#1A1F2C' : '#FFBD59';
+              
+              return (
+                <div 
+                  key={i} 
+                  className="w-8 rounded-sm animate-float" 
+                  style={{ 
+                    height: `${height}px`,
+                    backgroundColor: color,
+                    animationDelay: `${i * 0.1}s`,
+                    transform: `translateY(${Math.sin(i) * 5}px)`
+                  }}
+                ></div>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="relative z-10 w-full h-full flex items-center justify-center">
+          {/* Simple globe visualization using CSS */}
+          <div 
+            className="w-48 h-48 rounded-full bg-fem-gold/80 animate-float-slow shadow-lg"
+            style={{ 
+              backgroundImage: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,189,89,0.8) 50%, rgba(200,75,49,0.5) 100%)',
+              boxShadow: '0 0 40px rgba(255, 189, 89, 0.4)'
+            }}
+          >
+            {/* Add some "continents" as divs */}
+            <div className="absolute w-12 h-8 bg-fem-terracotta/40 rounded-full top-10 left-8 transform rotate-12"></div>
+            <div className="absolute w-10 h-14 bg-fem-terracotta/40 rounded-full top-20 left-20"></div>
+            <div className="absolute w-16 h-10 bg-fem-terracotta/40 rounded-full bottom-10 right-10 transform -rotate-12"></div>
+          </div>
+        </div>
+      )}
+      
+      {/* Add some particle effects */}
+      <div className="absolute inset-0 z-5 overflow-hidden">
+        {Array.from({ length: 15 }).map((_, i) => (
+          <div 
+            key={i}
+            className="absolute rounded-full bg-white/10"
+            style={{
+              width: `${Math.random() * 6 + 2}px`,
+              height: `${Math.random() * 6 + 2}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animation: `float ${Math.random() * 10 + 5}s infinite ease-in-out`,
+              animationDelay: `${Math.random() * 5}s`
+            }}
+          ></div>
+        ))}
+      </div>
     </div>
   );
-}
-
-// Simple placeholder for controls instead of OrbitControls
-function SimpleControls() {
-  // Just a placeholder, doesn't do anything but doesn't cause errors
-  return null;
 }
 
 export default ThreeDModel;
