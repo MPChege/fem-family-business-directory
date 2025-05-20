@@ -12,6 +12,8 @@ import JobPostedSuccessPage from "./pages/JobPostedSuccessPage";
 import CreateProfilePage from "./pages/CreateProfilePage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
+import SignInPage from "./pages/SignInPage";
+import ChatPage from "./pages/ChatPage";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
         <Route path="/profile" element={<CreateProfilePage />} />
         <Route path="/register" element={<CreateProfilePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/login" element={<SignInPage />} />
+        <Route path="/chat" element={<ChatPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
