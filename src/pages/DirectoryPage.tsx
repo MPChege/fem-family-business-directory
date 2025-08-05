@@ -36,7 +36,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -109,7 +109,6 @@ const DirectoryPage = () => {
           x: 0, 
           opacity: 1, 
           duration: 0.8, 
-          delay: 0.2,
           ease: "power2.out",
           scrollTrigger: {
             trigger: sidebarRef.current,
@@ -128,7 +127,6 @@ const DirectoryPage = () => {
           x: 0, 
           opacity: 1, 
           duration: 0.8, 
-          delay: 0.4,
           ease: "power2.out",
           scrollTrigger: {
             trigger: contentRef.current,
@@ -140,7 +138,142 @@ const DirectoryPage = () => {
       );
     }
 
+    // Add floating animation to stats cards
+    gsap.utils.toArray(".stats-card").forEach((card: any) => {
+      gsap.to(card, {
+        y: -10,
+        duration: 2,
+        ease: "power2.inOut",
+        yoyo: true,
+        repeat: -1,
+        scrollTrigger: {
+          trigger: card,
+          start: "top 80%",
+          toggleActions: "play reverse play reverse"
+        }
+      });
+    });
+
+    // Add magnetic effect to buttons
+    gsap.utils.toArray(".magnetic-btn").forEach((btn: any) => {
+      btn.addEventListener("mousemove", (e: MouseEvent) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        gsap.to(btn, {
+          x: x * 0.3,
+          y: y * 0.3,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+
+      btn.addEventListener("mouseleave", () => {
+        gsap.to(btn, {
+          x: 0,
+          y: 0,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+      });
+    });
+
+    // Add 3D tilt effect to business cards
+    gsap.utils.toArray(".business-card").forEach((card: any) => {
+      card.addEventListener("mousemove", (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 15;
+        const rotateY = (centerX - x) / 15;
+        
+        gsap.to(card, {
+          rotationX: rotateX,
+          rotationY: rotateY,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+
+      card.addEventListener("mouseleave", () => {
+        gsap.to(card, {
+          rotationX: 0,
+          rotationY: 0,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+      });
+    });
+
+    // Add neon glow effect to important elements
+    gsap.utils.toArray(".neon-element").forEach((element: any) => {
+      gsap.to(element, {
+        boxShadow: "0 0 20px #f97316, 0 0 40px #f97316, 0 0 60px #f97316",
+        duration: 1,
+        ease: "power2.inOut",
+        yoyo: true,
+        repeat: -1,
+        scrollTrigger: {
+          trigger: element,
+          start: "top 80%",
+          toggleActions: "play reverse play reverse"
+        }
+      });
+    });
+
+    // Add particle trail effect to the main content area
+    const contentArea = document.querySelector(".content-area");
+    if (contentArea) {
+      contentArea.addEventListener("mousemove", (e: MouseEvent) => {
+        if (Math.random() < 0.1) { // Only create particles occasionally
+          createParticle(e.clientX, e.clientY);
+        }
+      });
+    }
+
+    // Add text reveal animation to headings
+    gsap.utils.toArray(".text-reveal").forEach((element: any) => {
+      const text = element.textContent;
+      element.textContent = "";
+      
+      gsap.to(element, {
+        duration: 2,
+        text: text,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: element,
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    });
+
+    // Add wave animation to progress bars
+    gsap.utils.toArray(".wave-progress").forEach((progress: any) => {
+      const wave = progress.querySelector(".wave");
+      if (wave) {
+        gsap.to(wave, {
+          x: "100%",
+          duration: 2,
+          ease: "power2.inOut",
+          repeat: -1,
+          yoyo: true,
+          scrollTrigger: {
+            trigger: progress,
+            start: "top 80%",
+            toggleActions: "play reverse play reverse"
+          }
+        });
+      }
+    });
+
     return () => {
+      // Cleanup GSAP animations
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
@@ -176,6 +309,35 @@ const DirectoryPage = () => {
     "Technology", "Beauty & Salon", "Automotive", "Food & Dining", "Health & Fitness", 
     "Education", "Real Estate", "Fashion", "Home & Garden", "Professional Services"
   ];
+
+  const createParticle = (x: number, y: number) => {
+    const particle = document.createElement("div");
+    particle.className = "particle";
+    particle.style.cssText = `
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(45deg, #f97316, #eab308);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1000;
+      left: ${x}px;
+      top: ${y}px;
+    `;
+    
+    document.body.appendChild(particle);
+    
+    const randomX = (Math.random() - 0.5) * 200;
+    const randomY = (Math.random() - 0.5) * 200;
+    
+    particle.animate([
+      { transform: "translate(0, 0) scale(1)", opacity: 1 },
+      { transform: `translate(${randomX}px, ${randomY}px) scale(0)`, opacity: 0 }
+    ], {
+      duration: 1000,
+      easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+    }).onfinish = () => particle.remove();
+  };
 
   // Mock business data
   const mockBusinesses = [
@@ -415,10 +577,10 @@ const DirectoryPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 flex flex-col">
       <Navbar />
-      <main className="flex-grow">
+      <main className="flex-grow content-area">
         <div className="container mx-auto px-4 py-8">
           
-          {/* Header */}
+          {/* Header with Text Reveal */}
           <motion.div 
             ref={headerRef}
             initial={{ y: -50, opacity: 0 }}
@@ -426,17 +588,17 @@ const DirectoryPage = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="mb-8 text-center"
           >
-            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-fem-navy to-fem-terracotta text-white px-6 py-3 rounded-full shadow-lg mb-4">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-fem-navy to-fem-terracotta text-white px-6 py-3 rounded-full shadow-lg mb-4 neon-element">
               <Globe className="w-5 h-5" />
-              <h1 className="text-2xl font-bold">Business Directory</h1>
+              <h1 className="text-2xl font-bold text-reveal">Business Directory</h1>
               <Globe className="w-5 h-5" />
             </div>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto text-reveal">
               Discover trusted businesses in our faith community. Connect with local entrepreneurs and find the services you need.
             </p>
           </motion.div>
 
-          {/* Stats Section */}
+          {/* Stats Section with Floating Animation */}
           <motion.div 
             ref={statsRef}
             variants={containerVariants}
@@ -444,7 +606,7 @@ const DirectoryPage = () => {
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
           >
-            <motion.div variants={itemVariants} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg">
+            <motion.div variants={itemVariants} className="stats-card bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg floating">
               <div className="w-12 h-12 bg-gradient-to-br from-fem-terracotta to-fem-gold rounded-full flex items-center justify-center mx-auto mb-2">
                 <Building2 className="w-6 h-6 text-white" />
               </div>
@@ -452,7 +614,7 @@ const DirectoryPage = () => {
               <div className="text-sm text-gray-600">Businesses</div>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg">
+            <motion.div variants={itemVariants} className="stats-card bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg floating" style={{ animationDelay: "0.5s" }}>
               <div className="w-12 h-12 bg-gradient-to-br from-fem-navy to-fem-terracotta rounded-full flex items-center justify-center mx-auto mb-2">
                 <Users className="w-6 h-6 text-white" />
               </div>
@@ -460,7 +622,7 @@ const DirectoryPage = () => {
               <div className="text-sm text-gray-600">Community Members</div>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg">
+            <motion.div variants={itemVariants} className="stats-card bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg floating" style={{ animationDelay: "1s" }}>
               <div className="w-12 h-12 bg-gradient-to-br from-fem-gold to-fem-terracotta rounded-full flex items-center justify-center mx-auto mb-2">
                 <Star className="w-6 h-6 text-white" />
               </div>
@@ -468,7 +630,7 @@ const DirectoryPage = () => {
               <div className="text-sm text-gray-600">Average Rating</div>
             </motion.div>
             
-            <motion.div variants={itemVariants} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg">
+            <motion.div variants={itemVariants} className="stats-card bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg floating" style={{ animationDelay: "1.5s" }}>
               <div className="w-12 h-12 bg-gradient-to-br from-fem-terracotta to-fem-navy rounded-full flex items-center justify-center mx-auto mb-2">
                 <Award className="w-6 h-6 text-white" />
               </div>
@@ -718,34 +880,36 @@ const DirectoryPage = () => {
                                 <motion.div 
                                   key={`${business.id}-${index}`}
                                   variants={itemVariants}
-                                  className="group relative"
+                                  className="group business-card"
                                 >
-                                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100">
+                                  <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
                                     <div className="p-6">
                                       <div className="flex items-start justify-between mb-4">
                                         <div className="flex-1">
-                                          <h4 className="text-lg font-semibold text-fem-navy mb-2 group-hover:text-fem-terracotta transition-colors duration-300">
+                                          <h4 className="text-xl font-semibold text-fem-navy group-hover:text-fem-terracotta transition-colors duration-300 mb-2">
                                             {service.name}
                                           </h4>
-                                          <p className="text-gray-600 text-sm leading-relaxed mb-3">
+                                          <p className="text-gray-600 leading-relaxed mb-3">
                                             {service.description}
                                           </p>
                                         </div>
-                                        <div className="ml-4">
-                                          <Badge variant="outline" className="bg-gradient-to-r from-fem-terracotta to-fem-gold text-white border-0">
-                                            {business.category}
-                                          </Badge>
-                                        </div>
+                                        <Badge variant="outline" className="bg-gradient-to-r from-fem-terracotta to-fem-gold text-white border-0">
+                                          {business.category}
+                                        </Badge>
                                       </div>
                                       
-                                      <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-2">
+                                      <div className="flex items-center gap-6 text-sm text-gray-500 mb-4">
+                                        <div className="flex items-center gap-1">
                                           <Clock className="w-4 h-4 text-fem-terracotta" />
-                                          <span className="text-sm text-gray-600">{service.duration}</span>
+                                          <span>{service.duration}</span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                           <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                          <span className="text-sm text-gray-600">{business.rating}</span>
+                                          <span>{business.rating}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                          <Building2 className="w-4 h-4 text-fem-terracotta" />
+                                          <span>{business.name}</span>
                                         </div>
                                       </div>
                                       
@@ -753,7 +917,7 @@ const DirectoryPage = () => {
                                         <Button
                                           variant="outline"
                                           size="sm"
-                                          className="flex-1 border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white transition-all duration-300"
+                                          className="flex-1 border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white transition-all duration-300 magnetic-btn"
                                           onClick={() => navigate(`/business/${business.id}`)}
                                         >
                                           <Eye className="w-4 h-4 mr-2" />
@@ -761,7 +925,7 @@ const DirectoryPage = () => {
                                         </Button>
                                         <Button
                                           size="sm"
-                                          className="flex-1 bg-gradient-to-r from-fem-terracotta to-fem-gold text-white hover:from-fem-gold hover:to-fem-terracotta transition-all duration-300"
+                                          className="flex-1 bg-gradient-to-r from-fem-terracotta to-fem-gold text-white hover:from-fem-gold hover:to-fem-terracotta transition-all duration-300 magnetic-btn"
                                           onClick={() => navigate(`/chat?business=${business.id}`)}
                                         >
                                           <MessageSquare className="w-4 h-4 mr-2" />
@@ -770,10 +934,6 @@ const DirectoryPage = () => {
                                       </div>
                                     </div>
                                   </div>
-                                  
-                                  {/* Decorative Elements */}
-                                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-fem-terracotta to-fem-gold rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                  <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-br from-fem-gold to-fem-terracotta rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"></div>
                                 </motion.div>
                               ))
                             )}
@@ -944,17 +1104,11 @@ const DirectoryPage = () => {
                                           <Button
                                             variant="outline"
                                             size="sm"
-                                            className="flex-1 border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white transition-all duration-300 text-xs sm:text-sm h-8 sm:h-9"
+                                            className="flex-1 border-fem-navy text-fem-navy hover:bg-fem-navy hover:text-white text-xs sm:text-sm h-8 sm:h-9 magnetic-btn"
                                           >
-                                            <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                                            Photos
+                                            <Link to={`/business/${business.id}`}>View Details</Link>
                                           </Button>
-                                          <Button
-                                            size="sm"
-                                            className="flex-1 bg-gradient-to-r from-fem-terracotta to-fem-gold text-white hover:from-fem-gold hover:to-fem-terracotta transition-all duration-300 text-xs sm:text-sm h-8 sm:h-9"
-                                            onClick={() => navigate(`/chat?business=${business.id}`)}
-                                          >
-                                            <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                          <Button size="sm" className="flex-1 bg-fem-terracotta hover:bg-fem-terracotta/90 text-white text-xs sm:text-sm h-8 sm:h-9 magnetic-btn">
                                             Contact
                                           </Button>
                                         </div>

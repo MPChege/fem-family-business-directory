@@ -327,3 +327,577 @@ body {
     font-size: clamp(2.5rem, 10vw, 4rem);
   }
 }
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom CSS for Faith Connect */
+@layer components {
+  .fem-navy {
+    color: #1e3a8a;
+  }
+  
+  .fem-terracotta {
+    color: #f97316;
+  }
+  
+  .fem-gold {
+    color: #eab308;
+  }
+  
+  .fem-darkgray {
+    color: #6b7280;
+  }
+  
+  .bg-fem-navy {
+    background-color: #1e3a8a;
+  }
+  
+  .bg-fem-terracotta {
+    background-color: #f97316;
+  }
+  
+  .bg-fem-gold {
+    background-color: #eab308;
+  }
+  
+  .border-fem-navy {
+    border-color: #1e3a8a;
+  }
+  
+  .border-fem-terracotta {
+    border-color: #f97316;
+  }
+  
+  .border-fem-gold {
+    border-color: #eab308;
+  }
+  
+  .text-fem-navy {
+    color: #1e3a8a;
+  }
+  
+  .text-fem-terracotta {
+    color: #f97316;
+  }
+  
+  .text-fem-gold {
+    color: #eab308;
+  }
+  
+  .text-fem-darkgray {
+    color: #6b7280;
+  }
+  
+  .hover-card-effect {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-card-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Font utilities */
+  .font-mont {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* Text utilities */
+  .text-section-title {
+    font-size: 3rem;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+
+  .text-body-large {
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+
+  /* Container utilities */
+  .container-modern {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* Section utilities */
+  .section-full {
+    width: 100%;
+    padding: 6rem 0;
+  }
+
+  .section-full-auto {
+    width: 100%;
+    padding: 6rem 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .section-padding {
+    padding: 6rem 0;
+  }
+
+  /* Button utilities */
+  .btn-modern {
+    background: linear-gradient(135deg, #f97316 0%, #eab308 100%);
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+  }
+
+  /* Card utilities */
+  .hover-card-modern {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .hover-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Glass effect */
+  .glass-modern {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Gradient utilities */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+}
+
+/* Creative Animation Keyframes */
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes waveMove {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(249, 115, 22, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.8), 0 0 30px rgba(249, 115, 22, 0.6);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    transform: rotate(-180deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow: 0 0 5px #f97316, 0 0 10px #f97316, 0 0 15px #f97316;
+  }
+  50% {
+    text-shadow: 0 0 10px #f97316, 0 0 20px #f97316, 0 0 30px #f97316;
+  }
+}
+
+/* Animation Classes */
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+.gradient-bg {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+.wave-animation .wave {
+  animation: waveMove 2s ease-in-out infinite;
+}
+
+.pulse-animation {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.shake-animation {
+  animation: shake 0.5s ease-in-out;
+}
+
+.glow-animation {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.8s ease-out;
+}
+
+.rotate-in {
+  animation: rotateIn 1s ease-out;
+}
+
+.bounce-in {
+  animation: bounceIn 1s ease-out;
+}
+
+.glitch-animation {
+  animation: glitch 0.3s ease-in-out;
+}
+
+.neon-text {
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+/* Scroll Reveal Classes */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s ease-out;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger Animation Classes */
+.stagger-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+.stagger-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Particle Styles */
+.particle {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(45deg, #f97316, #eab308);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Magnetic Effect */
+.magnetic {
+  transition: transform 0.3s ease-out;
+}
+
+/* 3D Tilt Effect */
+.tilt-3d {
+  transition: transform 0.3s ease-out;
+  transform-style: preserve-3d;
+}
+
+/* Neon Glow Effect */
+.neon-glow {
+  transition: box-shadow 0.3s ease-out;
+}
+
+/* Text Reveal Effect */
+.text-reveal {
+  overflow: hidden;
+}
+
+/* Glitch Text Effect */
+.glitch-text {
+  position: relative;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  animation: glitch 0.3s ease-in-out infinite;
+  color: #f97316;
+  z-index: -1;
+}
+
+.glitch-text::after {
+  animation: glitch 0.3s ease-in-out infinite reverse;
+  color: #eab308;
+  z-index: -2;
+}
+
+/* Scale and Rotate Effect */
+.scale-rotate {
+  transition: transform 0.3s ease-out;
+}
+
+.scale-rotate:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
+/* Parallax Background */
+.parallax-bg {
+  will-change: transform;
+}
+
+/* Gradient Background Animation */
+.gradient-bg {
+  background: linear-gradient(-45deg, #1e3a8a, #f97316, #eab308, #1e3a8a);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+}
+
+/* Wave Animation */
+.wave-animation {
+  overflow: hidden;
+}
+
+.wave {
+  background: linear-gradient(90deg, #f97316, #eab308, #f97316);
+  background-size: 200% 100%;
+  animation: waveMove 2s ease-in-out infinite;
+}
+
+/* Responsive Animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .floating {
+    animation-duration: 4s;
+  }
+  
+  .gradient-bg {
+    animation-duration: 12s;
+  }
+  
+  .wave-animation .wave {
+    animation-duration: 3s;
+  }
+}
