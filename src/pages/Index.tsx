@@ -7,16 +7,10 @@ import { BusinessCategories } from "@/components/home/BusinessCategories";
 import { FeaturedBusinesses } from "@/components/home/FeaturedBusinesses";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { CallToAction } from "@/components/home/CallToAction";
-import { CommunityStats } from "@/components/home/CommunityStats";
-import { Testimonials } from "@/components/home/Testimonials";
-import ImageCarousel from "@/components/ui/ImageCarousel";
+import { OnboardingCheck } from "@/components/OnboardingCheck";
+// import { DataDebugger } from "@/components/debug/DataDebugger";
+// import { ApiTester } from "@/components/debug/ApiTester";
 import { createScrollAnimations, cleanupAnimations } from "@/utils/animation";
-
-const carouselImages = [
-  { src: "/lovable-uploads/f1a3f2a4-bbe7-46e5-be66-1ad39e35defa.png", alt: "Community Image 1" },
-  { src: "/lovable-uploads/b392f8fd-6fc5-4bfe-96aa-dc60f6854ba2.png", alt: "Community Image 2" },
-  { src: "/lovable-uploads/placeholder.svg", alt: "Community Image 3" }
-];
 
 export default function Index() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -92,7 +86,7 @@ export default function Index() {
     // Add floating animation to elements
     const floatingElements = document.querySelectorAll(".floating");
     floatingElements.forEach((element: any) => {
-      element.style.animation = "floating 3s ease-in-out infinite";
+      element.style.animation = "float 6s ease-in-out infinite";
     });
 
     // Add gradient animation to elements
@@ -233,116 +227,16 @@ export default function Index() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+      <OnboardingCheck />
       <Navbar />
-      
-      {/* Hero Section with Enhanced Animations */}
-      <section className="relative overflow-hidden">
-        <div className="parallax-bg absolute inset-0 bg-gradient-to-r from-fem-navy via-fem-terracotta to-fem-gold opacity-10" data-speed="0.3"></div>
-        <div className="floating absolute top-20 right-10 w-20 h-20 bg-gradient-to-br from-fem-terracotta to-fem-gold rounded-full opacity-20"></div>
-        <div className="floating absolute bottom-20 left-10 w-16 h-16 bg-gradient-to-br from-fem-gold to-fem-navy rounded-full opacity-20" style={{ animationDelay: "1s" }}></div>
+      <main className="flex-grow">
         <Hero />
-      </section>
-
-      {/* Business Categories with Stagger Animation */}
-      <section className="stagger-fade py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-reveal text-4xl font-bold text-fem-navy mb-4">Explore Business Categories</h2>
-            <p className="text-gray-600">Discover services and products from our trusted community</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { name: "Food & Dining", icon: "🍽️", description: "Restaurants, catering, and food services" },
-              { name: "Technology", icon: "💻", description: "IT services, web development, and tech support" },
-              { name: "Automotive", icon: "🚗", description: "Auto repair, maintenance, and car services" },
-              { name: "Health & Beauty", icon: "💄", description: "Salons, spas, and wellness services" }
-            ].map((category, index) => (
-              <div key={category.name} className="stagger-item tilt-3d magnetic neon-glow bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-                <div className="text-4xl mb-4">{category.icon}</div>
-                <h3 className="text-xl font-semibold text-fem-navy mb-2">{category.name}</h3>
-                <p className="text-gray-600 text-sm">{category.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Businesses with Scale Animation */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="glitch-text text-4xl font-bold text-fem-navy mb-4">Featured Businesses</h2>
-            <p className="text-gray-600">Trusted and verified businesses in our community</p>
-          </div>
-          <div className="scale-rotate">
-            <FeaturedBusinesses />
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works with Wave Animation */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-fem-navy mb-4">How It Works</h2>
-            <div className="wave-animation relative h-1 bg-gradient-to-r from-fem-terracotta to-fem-gold rounded-full overflow-hidden">
-              <div className="wave absolute top-0 left-0 w-full h-full bg-gradient-to-r from-fem-gold to-fem-terracotta"></div>
-            </div>
-          </div>
-          <HowItWorks />
-        </div>
-      </section>
-
-      {/* Community Stats with Gradient Background */}
-      <section className="py-16 gradient-bg bg-gradient-to-r from-fem-navy via-fem-terracotta to-fem-gold">
-        <div className="container mx-auto px-4">
-          <CommunityStats />
-        </div>
-      </section>
-
-      {/* Testimonials with Particle Trail */}
-      <section className="py-16 particle-trail">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-fem-navy mb-4">What Our Community Says</h2>
-            <p className="text-gray-600">Real experiences from our business community</p>
-          </div>
-          <Testimonials />
-        </div>
-      </section>
-
-      {/* Image Carousel with Enhanced Animations */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-fem-navy mb-4">Community Highlights</h2>
-            <p className="text-gray-600">Discover amazing moments from our community</p>
-          </div>
-          <div className="tilt-3d">
-            <ImageCarousel images={carouselImages} />
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action with Magnetic Effect */}
-      <section className="py-16 bg-gradient-to-r from-fem-navy to-fem-terracotta">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-white mb-4">Ready to Connect?</h2>
-            <p className="text-white/80 mb-8">Join our community and discover amazing businesses</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="magnetic neon-glow bg-white text-fem-navy px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300">
-                Explore Directory
-              </button>
-              <button className="magnetic neon-glow border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-fem-navy transition-all duration-300">
-                Register Business
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
+        <BusinessCategories />
+        <FeaturedBusinesses />
+        <HowItWorks />
+        <CallToAction />
+      </main>
       <Footer />
     </div>
   );
