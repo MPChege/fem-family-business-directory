@@ -443,21 +443,35 @@ const DirectoryPage = () => {
                     </TabsList>
 
                     <TabsContent value="services" className="mt-4 sm:mt-6">
-                      <div className="mb-6">
+                      <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="space-y-6"
+                      >
+                        <div className="mb-6">
                             <h3 className="text-xl sm:text-2xl font-bold text-fem-navy mb-2">Professional Services</h3>
                         <p className="text-gray-600">Discover trusted service providers in our community</p>
                           </div>
                           
                       <ServiceList filters={{ ...filters, searchTerm }} />
+                      </motion.div>
                     </TabsContent>
 
                     <TabsContent value="products" className="mt-4 sm:mt-6">
-                      <div className="mb-6">
-                        <h3 className="text-xl sm:text-2xl font-bold text-fem-navy mb-2">Quality Products</h3>
-                        <p className="text-gray-600">Find high-quality products from local businesses</p>
+                      <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="space-y-6"
+                      >
+                        <div className="mb-6">
+                          <h3 className="text-xl sm:text-2xl font-bold text-fem-navy mb-2">Quality Products</h3>
+                          <p className="text-gray-600">Find high-quality products from local businesses</p>
                         </div>
                         
                       <ProductList filters={{ ...filters, searchTerm }} />
+                      </motion.div>
                     </TabsContent>
                   </Tabs>
                 </CardContent>
