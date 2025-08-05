@@ -31,25 +31,27 @@ import {
   Eye,
   MessageSquare,
   Grid3X3,
-  List
+  List,
+  Shield
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
 const DirectoryPage = () => {
+  const { businesses, categories, isLoading } = useBusiness();
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState("services");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [filters, setFilters] = useState({
-    county: "",
-    category: "",
+    county: "all",
+    category: "all",
     rating: [0, 5],
     priceRange: [0, 10000],
     verifiedOnly: false,
@@ -278,8 +280,15 @@ const DirectoryPage = () => {
     };
   }, []);
 
+  // Get unique counties from businesses
+  const counties = Array.isArray(businesses) ? Array.from(new Set(businesses.map(b => b.county).filter(Boolean))).sort() : [];
+
+  // Get category names from categories
+  const categoryNames = Array.isArray(categories) ? categories.map(cat => cat.name) : [];
+
   const handleSearch = () => {
-    // Search functionality will be handled by BusinessList component
+    // Search functionality is handled by BusinessList component
+    setIsSearchExpanded(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -290,8 +299,8 @@ const DirectoryPage = () => {
 
   const clearFilters = () => {
     setFilters({
-      county: "",
-      category: "",
+      county: "all",
+      category: "all",
       rating: [0, 5],
       priceRange: [0, 10000],
       verifiedOnly: false,
@@ -309,35 +318,6 @@ const DirectoryPage = () => {
     "Technology", "Beauty & Salon", "Automotive", "Food & Dining", "Health & Fitness", 
     "Education", "Real Estate", "Fashion", "Home & Garden", "Professional Services"
   ];
-
-  const createParticle = (x: number, y: number) => {
-    const particle = document.createElement("div");
-    particle.className = "particle";
-    particle.style.cssText = `
-      position: fixed;
-      width: 4px;
-      height: 4px;
-      background: linear-gradient(45deg, #f97316, #eab308);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 1000;
-      left: ${x}px;
-      top: ${y}px;
-    `;
-    
-    document.body.appendChild(particle);
-    
-    const randomX = (Math.random() - 0.5) * 200;
-    const randomY = (Math.random() - 0.5) * 200;
-    
-    particle.animate([
-      { transform: "translate(0, 0) scale(1)", opacity: 1 },
-      { transform: `translate(${randomX}px, ${randomY}px) scale(0)`, opacity: 0 }
-    ], {
-      duration: 1000,
-      easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
-    }).onfinish = () => particle.remove();
-  };
 
   // Mock business data
   const mockBusinesses = [
@@ -580,7 +560,7 @@ const DirectoryPage = () => {
       <main className="flex-grow content-area">
         <div className="container mx-auto px-4 py-8">
           
-          {/* Header with Text Reveal */}
+          {/* Header */}
           <motion.div 
             ref={headerRef}
             initial={{ y: -50, opacity: 0 }}
@@ -588,9 +568,9 @@ const DirectoryPage = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="mb-8 text-center"
           >
-            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-fem-navy to-fem-terracotta text-white px-6 py-3 rounded-full shadow-lg mb-4 neon-element">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-fem-navy to-fem-terracotta text-white px-6 py-3 rounded-full shadow-lg mb-4">
               <Globe className="w-5 h-5" />
-              <h1 className="text-2xl font-bold text-reveal">Business Directory</h1>
+              <h1 className="text-2xl font-bold">Business Directory</h1>
               <Globe className="w-5 h-5" />
             </div>
             <p className="text-gray-600 max-w-2xl mx-auto text-reveal">
@@ -610,237 +590,188 @@ const DirectoryPage = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-fem-terracotta to-fem-gold rounded-full flex items-center justify-center mx-auto mb-2">
                 <Building2 className="w-6 h-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-fem-navy">1000+</div>
-              <div className="text-sm text-gray-600">Local Businesses</div>
+              <div className="text-2xl font-bold text-fem-navy">{stats.totalBusinesses}</div>
+              <div className="text-sm text-gray-600">Total Businesses</div>
             </motion.div>
             
             <motion.div variants={itemVariants} className="stats-card bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg floating" style={{ animationDelay: "0.5s" }}>
               <div className="w-12 h-12 bg-gradient-to-br from-fem-navy to-fem-terracotta rounded-full flex items-center justify-center mx-auto mb-2">
-                <Users className="w-6 h-6 text-white" />
+                <Shield className="w-6 h-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-fem-navy">2,500+</div>
-              <div className="text-sm text-gray-600">Community Members</div>
+              <div className="text-2xl font-bold text-fem-navy">{stats.verifiedBusinesses}</div>
+              <div className="text-sm text-gray-600">Verified</div>
             </motion.div>
             
             <motion.div variants={itemVariants} className="stats-card bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg floating" style={{ animationDelay: "1s" }}>
               <div className="w-12 h-12 bg-gradient-to-br from-fem-gold to-fem-terracotta rounded-full flex items-center justify-center mx-auto mb-2">
                 <Star className="w-6 h-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-fem-navy">4.8</div>
-              <div className="text-sm text-gray-600">Average Rating</div>
+              <div className="text-2xl font-bold text-fem-navy">{stats.averageRating}</div>
+              <div className="text-sm text-gray-600">Avg Rating</div>
             </motion.div>
             
             <motion.div variants={itemVariants} className="stats-card bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg floating" style={{ animationDelay: "1.5s" }}>
               <div className="w-12 h-12 bg-gradient-to-br from-fem-terracotta to-fem-navy rounded-full flex items-center justify-center mx-auto mb-2">
-                <Award className="w-6 h-6 text-white" />
+                <MessageSquare className="w-6 h-6 text-white" />
               </div>
-              <div className="text-2xl font-bold text-fem-navy">25</div>
-              <div className="text-sm text-gray-600">Counties</div>
+              <div className="text-2xl font-bold text-fem-navy">{stats.totalReviews}</div>
+              <div className="text-sm text-gray-600">Reviews</div>
             </motion.div>
           </motion.div>
 
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             
-            {/* Mobile Filter Button */}
-            <div className="lg:hidden mb-4">
-              <Button 
-                onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-                className="w-full bg-gradient-to-r from-fem-navy to-fem-terracotta text-white hover:from-fem-terracotta hover:to-fem-navy"
-              >
-                <Filter className="w-4 h-4 mr-2" />
-                {isMobileSidebarOpen ? "Hide Filters" : "Show Filters"}
-              </Button>
-            </div>
-            
-            {/* Sidebar */}
+            {/* Enhanced Sidebar */}
             <motion.div 
               ref={sidebarRef}
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className={`lg:w-1/4 ${isMobileSidebarOpen ? 'block' : 'hidden lg:block'}`}
+              className="lg:col-span-1"
             >
-              <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl lg:sticky lg:top-8">
+              <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl sticky top-8">
                 <CardHeader className="bg-gradient-to-r from-fem-navy to-fem-terracotta text-white rounded-t-lg">
                   <CardTitle className="flex items-center gap-2">
                     <Filter className="w-5 h-5" />
-                    Filter Businesses
+                    Filters
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                <CardContent className="p-6">
+                  <div className="space-y-6">
                   
                   {/* Search */}
-                  <motion.div variants={itemVariants}>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                      Search Businesses
-                    </Label>
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <div>
+                      <Label htmlFor="search" className="text-sm font-medium text-fem-navy">Search</Label>
                       <Input
-                        placeholder="Search by name, service..."
+                        id="search"
+                        placeholder="Search businesses..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        className="pl-10 bg-white/50 backdrop-blur-sm border-gray-200 focus:border-fem-terracotta text-sm"
+                        className="mt-1"
                       />
                     </div>
-                  </motion.div>
+
+                    {/* Category Filter */}
+                    <div>
+                      <Label className="text-sm font-medium text-fem-navy">Category</Label>
+                      <Select value={filters.category} onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="All Categories" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Categories</SelectItem>
+                          {categoryNames.map((category) => (
+                            <SelectItem key={category} value={category}>{category}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
                   {/* County Filter */}
-                  <motion.div variants={itemVariants}>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                      County
-                    </Label>
+                    <div>
+                      <Label className="text-sm font-medium text-fem-navy">County</Label>
                     <Select value={filters.county} onValueChange={(value) => setFilters(prev => ({ ...prev, county: value }))}>
-                      <SelectTrigger className="bg-white/50 backdrop-blur-sm border-gray-200 text-sm">
-                        <SelectValue placeholder="Select County" />
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="All Counties" />
                       </SelectTrigger>
                       <SelectContent>
+                          <SelectItem value="all">All Counties</SelectItem>
                         {counties.map((county) => (
                           <SelectItem key={county} value={county}>{county}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                  </motion.div>
-
-                  {/* Category Filter */}
-                  <motion.div variants={itemVariants}>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                      Category
-                    </Label>
-                    <Select value={filters.category} onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}>
-                      <SelectTrigger className="bg-white/50 backdrop-blur-sm border-gray-200 text-sm">
-                        <SelectValue placeholder="Select Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category} value={category}>{category}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </motion.div>
-
-                  {/* Rating Filter */}
-                  <motion.div variants={itemVariants}>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                      Minimum Rating
-                    </Label>
-                    <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-yellow-400" />
-                      <span className="text-sm text-gray-600">{filters.rating[0]}+</span>
                     </div>
+
+                    {/* Rating Filter */}
+                    <div>
+                      <Label className="text-sm font-medium text-fem-navy">Rating: {filters.rating[0]} - {filters.rating[1]}</Label>
                     <Slider
                       value={filters.rating}
-                      onValueChange={(value) => setFilters(prev => ({ ...prev, rating: value }))}
+                        onValueChange={(value) => setFilters(prev => ({ ...prev, rating: value as [number, number] }))}
                       max={5}
                       min={0}
                       step={0.5}
                       className="mt-2"
                     />
-                  </motion.div>
+                    </div>
 
-                  {/* Additional Filters */}
-                  <motion.div variants={itemVariants} className="space-y-3">
+                    {/* Checkboxes */}
+                    <div className="space-y-3">
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="verified"
                         checked={filters.verifiedOnly}
                         onCheckedChange={(checked) => setFilters(prev => ({ ...prev, verifiedOnly: checked as boolean }))}
                       />
-                      <Label htmlFor="verified" className="text-sm cursor-pointer">
-                        Verified Businesses Only
-                      </Label>
+                        <Label htmlFor="verified" className="text-sm">Verified Only</Label>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="openNow"
-                        checked={filters.openNow}
-                        onCheckedChange={(checked) => setFilters(prev => ({ ...prev, openNow: checked as boolean }))}
-                      />
-                      <Label htmlFor="openNow" className="text-sm cursor-pointer">
-                        Open Now
-                      </Label>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="hasPhotos"
-                        checked={filters.hasPhotos}
-                        onCheckedChange={(checked) => setFilters(prev => ({ ...prev, hasPhotos: checked as boolean }))}
-                      />
-                      <Label htmlFor="hasPhotos" className="text-sm cursor-pointer">
-                        With Photos
-                      </Label>
-                    </div>
-                  </motion.div>
 
                   {/* Clear Filters */}
-                  <motion.div variants={itemVariants}>
                     <Button
-                      variant="outline"
                       onClick={clearFilters}
-                      className="w-full bg-gradient-to-r from-fem-terracotta to-fem-gold text-white border-0 hover:from-fem-gold hover:to-fem-terracotta transition-all duration-300"
+                      variant="outline"
+                      className="w-full"
                     >
-                      <X className="w-4 h-4 mr-2" />
                       Clear Filters
                     </Button>
-                  </motion.div>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Main Content */}
+            {/* Enhanced Content */}
             <motion.div 
               ref={contentRef}
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="lg:w-3/4"
+              className="lg:col-span-3"
             >
               <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl">
                 <CardHeader className="bg-gradient-to-r from-fem-navy to-fem-terracotta text-white rounded-t-lg">
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
-                      <Sparkles className="w-5 h-5" />
-                      Discover Businesses
+                      <TrendingUp className="w-5 h-5" />
+                      {activeTab === "services" ? "Services" : "Products"}
                     </CardTitle>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="bg-white/20 text-white border-white/30">
-                        {filteredBusinesses.length} found
-                      </Badge>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-white/20 text-white border-white/30 hover:bg-white/30"
+                        onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+                      >
+                        {viewMode === "grid" ? <List className="w-4 h-4" /> : <Grid3X3 className="w-4 h-4" />}
+                      </Button>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 sm:p-6">
-                  
-                  {/* Tabs */}
+                <CardContent className="p-6">
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-xl mb-6 sm:mb-8">
+                    <TabsList className="grid w-full grid-cols-2 bg-gray-100/50 backdrop-blur-sm">
                       <TabsTrigger 
                         value="services" 
-                        className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fem-terracotta data-[state=active]:to-fem-gold data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 rounded-lg text-xs sm:text-sm"
+                        className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-fem-terracotta data-[state=active]:to-fem-gold data-[state=active]:text-white"
                       >
-                        <Settings className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                        <Settings className="w-4 h-4" />
                         Services
                       </TabsTrigger>
                       <TabsTrigger 
                         value="products" 
-                        className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-fem-terracotta data-[state=active]:to-fem-gold data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 rounded-lg text-xs sm:text-sm"
+                        className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-fem-terracotta data-[state=active]:to-fem-gold data-[state=active]:text-white"
                       >
-                        <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                        <Package className="w-4 h-4" />
                         Products
                       </TabsTrigger>
                     </TabsList>
 
-                    {/* Services Tab Content */}
                     <TabsContent value="services" className="mt-4 sm:mt-6">
-                      <motion.div 
-                        variants={itemVariants}
-                        className="space-y-4 sm:space-y-6"
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
-                          <div className="text-center sm:text-left mb-4 sm:mb-0">
+                      <div className="mb-6">
                             <h3 className="text-xl sm:text-2xl font-bold text-fem-navy mb-2">Professional Services</h3>
-                            <p className="text-gray-600 text-sm sm:text-base">Discover trusted service providers in our community</p>
+                        <p className="text-gray-600">Discover trusted service providers in our community</p>
                           </div>
                           
                           {/* View Toggle for Services */}
@@ -880,36 +811,34 @@ const DirectoryPage = () => {
                                 <motion.div 
                                   key={`${business.id}-${index}`}
                                   variants={itemVariants}
-                                  className="group business-card"
+                                  className="group relative"
                                 >
-                                  <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100">
                                     <div className="p-6">
                                       <div className="flex items-start justify-between mb-4">
                                         <div className="flex-1">
-                                          <h4 className="text-xl font-semibold text-fem-navy group-hover:text-fem-terracotta transition-colors duration-300 mb-2">
+                                          <h4 className="text-lg font-semibold text-fem-navy mb-2 group-hover:text-fem-terracotta transition-colors duration-300">
                                             {service.name}
                                           </h4>
-                                          <p className="text-gray-600 leading-relaxed mb-3">
+                                          <p className="text-gray-600 text-sm leading-relaxed mb-3">
                                             {service.description}
                                           </p>
                                         </div>
-                                        <Badge variant="outline" className="bg-gradient-to-r from-fem-terracotta to-fem-gold text-white border-0">
-                                          {business.category}
-                                        </Badge>
+                                        <div className="ml-4">
+                                          <Badge variant="outline" className="bg-gradient-to-r from-fem-terracotta to-fem-gold text-white border-0">
+                                            {business.category}
+                                          </Badge>
+                                        </div>
                                       </div>
                                       
-                                      <div className="flex items-center gap-6 text-sm text-gray-500 mb-4">
-                                        <div className="flex items-center gap-1">
+                                      <div className="flex items-center justify-between mb-4">
+                                        <div className="flex items-center gap-2">
                                           <Clock className="w-4 h-4 text-fem-terracotta" />
-                                          <span>{service.duration}</span>
+                                          <span className="text-sm text-gray-600">{service.duration}</span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                           <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                          <span>{business.rating}</span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                          <Building2 className="w-4 h-4 text-fem-terracotta" />
-                                          <span>{business.name}</span>
+                                          <span className="text-sm text-gray-600">{business.rating}</span>
                                         </div>
                                       </div>
                                       
@@ -917,7 +846,7 @@ const DirectoryPage = () => {
                                         <Button
                                           variant="outline"
                                           size="sm"
-                                          className="flex-1 border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white transition-all duration-300 magnetic-btn"
+                                          className="flex-1 border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white transition-all duration-300"
                                           onClick={() => navigate(`/business/${business.id}`)}
                                         >
                                           <Eye className="w-4 h-4 mr-2" />
@@ -925,7 +854,7 @@ const DirectoryPage = () => {
                                         </Button>
                                         <Button
                                           size="sm"
-                                          className="flex-1 bg-gradient-to-r from-fem-terracotta to-fem-gold text-white hover:from-fem-gold hover:to-fem-terracotta transition-all duration-300 magnetic-btn"
+                                          className="flex-1 bg-gradient-to-r from-fem-terracotta to-fem-gold text-white hover:from-fem-gold hover:to-fem-terracotta transition-all duration-300"
                                           onClick={() => navigate(`/chat?business=${business.id}`)}
                                         >
                                           <MessageSquare className="w-4 h-4 mr-2" />
@@ -934,6 +863,10 @@ const DirectoryPage = () => {
                                       </div>
                                     </div>
                                   </div>
+                                  
+                                  {/* Decorative Elements */}
+                                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-fem-terracotta to-fem-gold rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                  <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gradient-to-br from-fem-gold to-fem-terracotta rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"></div>
                                 </motion.div>
                               ))
                             )}
@@ -1024,15 +957,10 @@ const DirectoryPage = () => {
                       </motion.div>
                     </TabsContent>
 
-                    {/* Products Tab Content */}
                     <TabsContent value="products" className="mt-4 sm:mt-6">
-                      <motion.div 
-                        variants={itemVariants}
-                        className="space-y-6 sm:space-y-8"
-                      >
-                        <div className="text-center mb-6 sm:mb-8">
-                          <h3 className="text-xl sm:text-3xl font-bold text-fem-navy mb-2 sm:mb-3">Discover Amazing Products</h3>
-                          <p className="text-gray-600 text-sm sm:text-lg">Explore products from our trusted business community</p>
+                      <div className="mb-6">
+                        <h3 className="text-xl sm:text-2xl font-bold text-fem-navy mb-2">Quality Products</h3>
+                        <p className="text-gray-600">Find high-quality products from local businesses</p>
                         </div>
                         
                         {/* Products List View Only */}
@@ -1104,11 +1032,17 @@ const DirectoryPage = () => {
                                           <Button
                                             variant="outline"
                                             size="sm"
-                                            className="flex-1 border-fem-navy text-fem-navy hover:bg-fem-navy hover:text-white text-xs sm:text-sm h-8 sm:h-9 magnetic-btn"
+                                            className="flex-1 border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white transition-all duration-300 text-xs sm:text-sm h-8 sm:h-9"
                                           >
-                                            <Link to={`/business/${business.id}`}>View Details</Link>
+                                            <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                            Photos
                                           </Button>
-                                          <Button size="sm" className="flex-1 bg-fem-terracotta hover:bg-fem-terracotta/90 text-white text-xs sm:text-sm h-8 sm:h-9 magnetic-btn">
+                                          <Button
+                                            size="sm"
+                                            className="flex-1 bg-gradient-to-r from-fem-terracotta to-fem-gold text-white hover:from-fem-gold hover:to-fem-terracotta transition-all duration-300 text-xs sm:text-sm h-8 sm:h-9"
+                                            onClick={() => navigate(`/chat?business=${business.id}`)}
+                                          >
+                                            <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                                             Contact
                                           </Button>
                                         </div>
