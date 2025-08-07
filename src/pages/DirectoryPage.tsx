@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BusinessList } from "@/components/directory/BusinessList";
+import { useBusiness } from "@/contexts/BusinessContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -286,6 +287,16 @@ const DirectoryPage = () => {
   // Get category names from categories
   const categoryNames = Array.isArray(categories) ? categories.map(cat => cat.name) : [];
 
+  // Calculate stats from businesses
+  const stats = {
+    totalBusinesses: Array.isArray(businesses) ? businesses.length : 0,
+    verifiedBusinesses: Array.isArray(businesses) ? businesses.filter(b => b.verified).length : 0,
+    averageRating: Array.isArray(businesses) && businesses.length > 0 
+      ? (businesses.reduce((sum, b) => sum + (b.rating || 0), 0) / businesses.length).toFixed(1)
+      : "0.0",
+    totalReviews: Array.isArray(businesses) ? businesses.reduce((sum, b) => sum + (b.reviewCount || 0), 0) : 0
+  };
+
   const handleSearch = () => {
     // Search functionality is handled by BusinessList component
     setIsSearchExpanded(false);
@@ -309,15 +320,6 @@ const DirectoryPage = () => {
       sortBy: "default"
     });
   };
-
-  const counties = [
-    "Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret", "Thika", "Nyeri", "Kakamega", "Kisii", "Kericho"
-  ];
-
-  const categories = [
-    "Technology", "Beauty & Salon", "Automotive", "Food & Dining", "Health & Fitness", 
-    "Education", "Real Estate", "Fashion", "Home & Garden", "Professional Services"
-  ];
 
   // Mock business data
   const mockBusinesses = [
