@@ -8,7 +8,6 @@ import { OnboardingProvider } from "@/contexts/OnboardingContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { BusinessProvider } from "@/contexts/BusinessContext";
 import Index from "./pages/Index";
-import DirectoryPage from "./pages/DirectoryPage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
 import SignInPage from "./pages/SignInPage";
@@ -41,7 +40,6 @@ const App = () => (
             <OnboardingProvider>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/directory" element={<DirectoryPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/login" element={<SignInPage />} />
