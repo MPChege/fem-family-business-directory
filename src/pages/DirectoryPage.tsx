@@ -803,7 +803,6 @@ const DirectoryPage = () => {
                               <List className="w-3 h-3 sm:w-4 sm:h-4" />
                             </Button>
                           </div>
-                        </div>
                         
                         {/* Services Grid View */}
                         {viewMode === "grid" && (
@@ -1051,7 +1050,6 @@ const DirectoryPage = () => {
                                       </div>
                                     </div>
                                   </div>
-                                </div>
                               </motion.div>
                             ))
                           )}
