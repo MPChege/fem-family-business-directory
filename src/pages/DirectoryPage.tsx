@@ -49,16 +49,6 @@ const DirectoryPage = () => {
   // Get category names from categories
   const categoryNames = Array.isArray(categories) ? categories.map(cat => cat.name) : [];
 
-  // Calculate stats from businesses
-  const stats = {
-    totalBusinesses: Array.isArray(businesses) ? businesses.length : 0,
-    verifiedBusinesses: Array.isArray(businesses) ? businesses.filter(b => b.verified).length : 0,
-    averageRating: Array.isArray(businesses) && businesses.length > 0 
-      ? (businesses.reduce((sum, b) => sum + (b.rating || 0), 0) / businesses.length).toFixed(1)
-      : "0.0",
-    totalReviews: Array.isArray(businesses) ? businesses.reduce((sum, b) => sum + (b.reviewCount || 0), 0) : 0
-  };
-
   const handleSearch = () => {
     // Search functionality is handled by filtering
   };
@@ -92,6 +82,25 @@ const DirectoryPage = () => {
     
     return matchesSearch && matchesCounty && matchesCategory && matchesRating && matchesVerified;
   }) : [];
+
+  // Calculate statistics with improved logic
+  const stats = {
+    totalBusinesses: Array.isArray(businesses) ? businesses.length : 0,
+    verifiedBusinesses: Array.isArray(businesses) ? businesses.filter(b => b.verified || b.is_verified).length : 0,
+    averageRating: (() => {
+      if (!Array.isArray(businesses) || businesses.length === 0) return "0.0";
+      
+      // Calculate average rating from all reviews (matching admin dashboard logic)
+      const allReviews = businesses.flatMap(b => 
+        Array(b.review_count || b.reviewCount || 0).fill(b.rating).filter(rating => rating > 0)
+      );
+      
+      return allReviews.length > 0 
+        ? (allReviews.reduce((sum, rating) => sum + rating, 0) / allReviews.length).toFixed(1)
+        : "0.0";
+    })(),
+    totalReviews: Array.isArray(businesses) ? businesses.reduce((sum, b) => sum + (b.review_count || b.reviewCount || 0), 0) : 0
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
