@@ -1,203 +1,225 @@
 
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Search, LogOut, User, Menu, X } from "lucide-react";
-import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
+import { 
+  Menu, X, Home, Building2, Users, Heart, 
+  Crown, Gem, Diamond, Sparkles, Star
+} from "lucide-react";
 
-export const Navbar = () => {
-  const { user, isAuthenticated, logout } = useAuth();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
+export function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setIsMobileMenuOpen(false);
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
+  const navItems = [
+    { name: "Home", path: "/", icon: <Home className="w-4 h-4" /> },
+    { name: "Directory", path: "/directory", icon: <Building2 className="w-4 h-4" /> },
+    { name: "Community", path: "/community", icon: <Users className="w-4 h-4" /> },
+    { name: "About", path: "/about", icon: <Heart className="w-4 h-4" /> },
+  ];
 
   return (
-    <nav className="bg-white shadow-sm py-4 relative">
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2" onClick={closeMobileMenu}>
-          <img 
-            src="/lovable-uploads/f1a3f2a4-bbe7-46e5-be66-1ad39e35defa.png" 
-            alt="FEM Family Church Logo" 
-            className="h-10 w-auto sm:h-12" 
-          />
-          <div className="hidden sm:flex flex-col">
-            <span className="font-heading font-semibold text-fem-navy text-sm sm:text-base">Faith Connect</span>
-            <span className="text-xs text-fem-darkgray">Business Directory</span>
-          </div>
-          <div className="sm:hidden">
-            <span className="font-heading font-semibold text-fem-navy text-sm">Faith Connect</span>
-          </div>
-        </Link>
-        
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link to="/directory" className="text-fem-navy hover:text-fem-terracotta transition-colors">
-            Business Directory
-          </Link>
-          {isAuthenticated && user?.user_type === "business" && (
-            <Link to="/register-business" className="text-fem-navy hover:text-fem-terracotta transition-colors">
-              List Business
-            </Link>
-          )}
-          <Link to="/about" className="text-fem-navy hover:text-fem-terracotta transition-colors">
-            About
-          </Link>
-          {isAuthenticated && (
-            <Link to="/chat" className="text-fem-navy hover:text-fem-terracotta transition-colors">
-              Chat
-            </Link>
-          )}
-        </div>
-        
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="text-fem-navy">
-            <Search className="h-5 w-5" />
-          </Button>
-          
-          {isAuthenticated ? (
-            <div className="flex items-center gap-2">
-              <Link to="/profile">
-                <Button variant="outline" className="flex items-center gap-2 border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white">
-                  <User className="h-4 w-4" />
-                  <span>Profile</span>
-                </Button>
-              </Link>
-              <Button 
-                variant="ghost" 
-                className="text-fem-navy hover:text-fem-terracotta"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                <span>Logout</span>
-              </Button>
-            </div>
-          ) : (
-            <>
-              <Link to="/login">
-                <Button variant="outline" className="border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white">
-                  Sign In
-                </Button>
-              </Link>
-              <Link to="/register">
-                <Button className="bg-fem-terracotta hover:bg-fem-terracotta/90 text-white">
-                  Register
-                </Button>
-              </Link>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="text-fem-navy">
-            <Search className="h-5 w-5" />
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="text-fem-navy"
-            onClick={toggleMobileMenu}
+    <motion.nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled 
+          ? "bg-white/90 backdrop-blur-md shadow-lg border-b border-silver/20" 
+          : "bg-transparent"
+      }`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.8 }}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <motion.div 
+            className="flex items-center space-x-3"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
           >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-100 z-50">
-          <div className="container mx-auto px-4 py-4 space-y-4">
-            {/* Mobile Navigation Links */}
-            <div className="space-y-3">
-              <Link 
-                to="/directory" 
-                className="block py-2 text-fem-navy hover:text-fem-terracotta transition-colors"
-                onClick={closeMobileMenu}
-              >
-                Business Directory
-              </Link>
-              {isAuthenticated && user?.user_type === "business" && (
-                <Link 
-                  to="/register-business" 
-                  className="block py-2 text-fem-navy hover:text-fem-terracotta transition-colors"
-                  onClick={closeMobileMenu}
-                >
-                  List Business
-                </Link>
-              )}
-              <Link 
-                to="/about" 
-                className="block py-2 text-fem-navy hover:text-fem-terracotta transition-colors"
-                onClick={closeMobileMenu}
-              >
-                About
-              </Link>
-              {isAuthenticated && (
-                <Link 
-                  to="/chat" 
-                  className="block py-2 text-fem-navy hover:text-fem-terracotta transition-colors"
-                  onClick={closeMobileMenu}
-                >
-                  Chat
-                </Link>
-              )}
+            <div className="flex items-center space-x-2">
+              <div className="relative">
+                <Crown className="w-8 h-8 text-fem-gold" />
+                <motion.div 
+                  className="absolute -top-1 -right-1 w-3 h-3 bg-fem-gold rounded-full"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </div>
+              <div className="flex items-center space-x-1">
+                <Gem className="w-6 h-6 text-silver" />
+                <Diamond className="w-8 h-8 text-fem-gold" />
+              </div>
             </div>
-
-            {/* Mobile Actions */}
-            <div className="pt-4 border-t border-gray-100 space-y-3">
-              {isAuthenticated ? (
-                <>
-                  <Link to="/profile" onClick={closeMobileMenu}>
-                    <Button variant="outline" className="w-full border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white">
-                      <User className="h-4 w-4 mr-2" />
-                      Profile
-                    </Button>
-                  </Link>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full text-fem-navy hover:text-fem-terracotta"
-                    onClick={handleLogout}
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={closeMobileMenu}>
-                    <Button variant="outline" className="w-full border-fem-terracotta text-fem-terracotta hover:bg-fem-terracotta hover:text-white">
-                      Sign In
-                    </Button>
-                  </Link>
-                  <Link to="/register" onClick={closeMobileMenu}>
-                    <Button className="w-full bg-fem-terracotta hover:bg-fem-terracotta/90 text-white">
-                      Register
-                    </Button>
-                  </Link>
-                </>
-              )}
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-fem-navy font-['Playfair_Display']">
+                FaithConnect
+              </span>
+              <span className="text-xs text-gray-500">Business Directory</span>
             </div>
+          </motion.div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <motion.div
+                key={item.name}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to={item.path}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 group ${
+                    location.pathname === item.path
+                      ? "bg-gradient-to-r from-fem-gold to-yellow-500 text-fem-navy shadow-lg"
+                      : "text-gray-700 hover:text-fem-gold hover:bg-white/50"
+                  }`}
+                >
+                  <span className="group-hover:rotate-12 transition-transform duration-300">
+                    {item.icon}
+                  </span>
+                  <span className="font-semibold">{item.name}</span>
+                  {location.pathname === item.path && (
+                    <motion.div
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-fem-gold"
+                      layoutId="activeTab"
+                    />
+                  )}
+                </Link>
+              </motion.div>
+            ))}
           </div>
+
+          {/* CTA Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
+            <motion.button
+              className="px-6 py-3 text-fem-gold border-2 border-fem-gold rounded-xl font-semibold hover:bg-fem-gold hover:text-white transition-all duration-300 group"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="flex items-center space-x-2">
+                <Building2 className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+                <span>List Business</span>
+              </span>
+            </motion.button>
+            <motion.button
+              className="px-6 py-3 bg-gradient-to-r from-fem-gold to-yellow-500 text-fem-navy rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="flex items-center space-x-2">
+                <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+                <span>Get Started</span>
+              </span>
+            </motion.button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <motion.button
+            className="md:hidden p-2 rounded-lg bg-white/20 backdrop-blur-sm border border-silver/30"
+            onClick={() => setIsOpen(!isOpen)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <AnimatePresence mode="wait">
+              {isOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X className="w-6 h-6 text-fem-navy" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Menu className="w-6 h-6 text-fem-navy" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </div>
-      )}
-    </nav>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              className="md:hidden"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="py-6 space-y-4 bg-white/95 backdrop-blur-md rounded-2xl mt-4 border border-silver/20 shadow-xl">
+                {navItems.map((item, index) => (
+                  <motion.div
+                    key={item.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Link
+                      to={item.path}
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 group ${
+                        location.pathname === item.path
+                          ? "bg-gradient-to-r from-fem-gold to-yellow-500 text-fem-navy"
+                          : "text-gray-700 hover:text-fem-gold hover:bg-gray-50"
+                      }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <span className="group-hover:rotate-12 transition-transform duration-300">
+                        {item.icon}
+                      </span>
+                      <span className="font-semibold">{item.name}</span>
+                    </Link>
+                  </motion.div>
+                ))}
+                
+                {/* Mobile CTA Buttons */}
+                <div className="pt-4 space-y-3">
+                  <motion.button
+                    className="w-full px-6 py-3 text-fem-gold border-2 border-fem-gold rounded-xl font-semibold hover:bg-fem-gold hover:text-white transition-all duration-300"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="flex items-center justify-center space-x-2">
+                      <Building2 className="w-4 h-4" />
+                      <span>List Business</span>
+                    </span>
+                  </motion.button>
+                  <motion.button
+                    className="w-full px-6 py-3 bg-gradient-to-r from-fem-gold to-yellow-500 text-fem-navy rounded-xl font-semibold shadow-lg"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="flex items-center justify-center space-x-2">
+                      <Sparkles className="w-4 h-4" />
+                      <span>Get Started</span>
+                    </span>
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.nav>
   );
-};
+}
